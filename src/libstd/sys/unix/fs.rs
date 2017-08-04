@@ -23,20 +23,22 @@ use sys::time::SystemTime;
 use sys::{cvt, cvt_r};
 use sys_common::{AsInner, FromInner};
 
-#[cfg(any(target_os = "linux", target_os = "emscripten"))]
+#[cfg(any(target_os = "linux", target_os = "emscripten", target_os = "l4re"))]
 use libc::{stat64, fstat64, lstat64, off64_t, ftruncate64, lseek64, dirent64, readdir64_r, open64};
 #[cfg(target_os = "android")]
 use libc::{stat as stat64, fstat as fstat64, lstat as lstat64, lseek64,
            dirent as dirent64, open as open64};
 #[cfg(not(any(target_os = "linux",
               target_os = "emscripten",
-              target_os = "android")))]
+              target_os = "android",
+              target_os = "l4re")))]
 use libc::{stat as stat64, fstat as fstat64, lstat as lstat64, off_t as off64_t,
            ftruncate as ftruncate64, lseek as lseek64, dirent as dirent64, open as open64};
 #[cfg(not(any(target_os = "linux",
               target_os = "emscripten",
               target_os = "solaris",
-              target_os = "fuchsia")))]
+              target_os = "fuchsia",
+              target_os = "l4re")))]
 use libc::{readdir_r as readdir64_r};
 
 pub struct File(FileDesc);
@@ -340,7 +342,8 @@ impl DirEntry {
     #[cfg(any(target_os = "android",
               target_os = "linux",
               target_os = "emscripten",
-              target_os = "haiku"))]
+              target_os = "haiku",
+              target_os = "l4re"))]
     fn name_bytes(&self) -> &[u8] {
         unsafe {
             CStr::from_ptr(self.entry.d_name.as_ptr()).to_bytes()

@@ -44,5 +44,6 @@ pub mod linux;
 #[cfg(all(not(dox), target_os = "solaris"))]    pub mod solaris;
 #[cfg(all(not(dox), target_os = "emscripten"))] pub mod emscripten;
 #[cfg(all(not(dox), target_os = "fuchsia"))]    pub mod fuchsia;
+#[cfg(all(not(dox), target_os = "l4re"))]       pub mod l4re;
 
 pub mod raw;

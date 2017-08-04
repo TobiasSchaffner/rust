@@ -161,6 +161,7 @@ impl Command {
             t!(cvt_r(|| libc::dup2(fd, libc::STDERR_FILENO)));
         }
 
+        //TODO gibt es nicht im l4re cfg!(not(target_os = "l4re"))
         if let Some(u) = self.get_gid() {
             t!(cvt(libc::setgid(u as gid_t)));
         }
@@ -184,7 +185,9 @@ impl Command {
         }
 
         // NaCl has no signal support.
-        if cfg!(not(any(target_os = "nacl", target_os = "emscripten"))) {
+        if cfg!(not(any(target_os = "nacl",
+                        target_os = "emscripten",
+                        target_os = "l4re"))) {
             // Reset signal handling so the child process starts in a
             // standardized state. libstd ignores SIGPIPE, and signal-handling
             // libraries often set a mask. Child processes inherit ignored

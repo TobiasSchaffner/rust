@@ -20,8 +20,10 @@ use build_helper::{run, native_lib_boilerplate};
 fn main() {
     let target = env::var("TARGET").expect("TARGET was not set");
     let host = env::var("HOST").expect("HOST was not set");
-    if cfg!(feature = "backtrace") && !target.contains("apple") && !target.contains("msvc") &&
-        !target.contains("emscripten") && !target.contains("fuchsia") && !target.contains("redox") {
+    if cfg!(feature = "backtrace") && !target.contains("apple") &&
+        !target.contains("msvc") && !target.contains("emscripten") &&
+        !target.contains("fuchsia") && !target.contains("redox") &&
+        !target.contains("l4re") {
         let _ = build_libbacktrace(&host, &target);
     }
 
