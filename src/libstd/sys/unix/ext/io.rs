@@ -13,7 +13,8 @@
 #![stable(feature = "rust1", since = "1.0.0")]
 
 use fs;
-#[cfg(not(target_os = "l4re"))] use net;
+#[cfg(not(target_os = "l4re"))]
+use net;
 use os::raw;
 use sys;
 use io;
@@ -94,17 +95,17 @@ impl IntoRawFd for fs::File {
 }
 
 #[stable(feature = "rust1", since = "1.0.0")]
-#[cfg(not(target_os = "l4re"))] use net;
+#[cfg(not(target_os = "l4re"))]
 impl AsRawFd for net::TcpStream {
     fn as_raw_fd(&self) -> RawFd { *self.as_inner().socket().as_inner() }
 }
 #[stable(feature = "rust1", since = "1.0.0")]
-#[cfg(not(target_os = "l4re"))] use net;
+#[cfg(not(target_os = "l4re"))]
 impl AsRawFd for net::TcpListener {
     fn as_raw_fd(&self) -> RawFd { *self.as_inner().socket().as_inner() }
 }
 #[stable(feature = "rust1", since = "1.0.0")]
-#[cfg(not(target_os = "l4re"))] use net;
+#[cfg(not(target_os = "l4re"))]
 impl AsRawFd for net::UdpSocket {
     fn as_raw_fd(&self) -> RawFd { *self.as_inner().socket().as_inner() }
 }
@@ -125,7 +126,7 @@ impl AsRawFd for io::Stderr {
 }
 
 #[stable(feature = "from_raw_os", since = "1.1.0")]
-#[cfg(not(target_os = "l4re"))] use net;
+#[cfg(not(target_os = "l4re"))]
 impl FromRawFd for net::TcpStream {
     unsafe fn from_raw_fd(fd: RawFd) -> net::TcpStream {
         let socket = sys::net::Socket::from_inner(fd);
@@ -133,7 +134,7 @@ impl FromRawFd for net::TcpStream {
     }
 }
 #[stable(feature = "from_raw_os", since = "1.1.0")]
-#[cfg(not(target_os = "l4re"))] use net;
+#[cfg(not(target_os = "l4re"))]
 impl FromRawFd for net::TcpListener {
     unsafe fn from_raw_fd(fd: RawFd) -> net::TcpListener {
         let socket = sys::net::Socket::from_inner(fd);
@@ -141,7 +142,7 @@ impl FromRawFd for net::TcpListener {
     }
 }
 #[stable(feature = "from_raw_os", since = "1.1.0")]
-#[cfg(not(target_os = "l4re"))] use net;
+#[cfg(not(target_os = "l4re"))]
 impl FromRawFd for net::UdpSocket {
     unsafe fn from_raw_fd(fd: RawFd) -> net::UdpSocket {
         let socket = sys::net::Socket::from_inner(fd);
@@ -150,21 +151,21 @@ impl FromRawFd for net::UdpSocket {
 }
 
 #[stable(feature = "into_raw_os", since = "1.4.0")]
-#[cfg(not(target_os = "l4re"))] use net;
+#[cfg(not(target_os = "l4re"))]
 impl IntoRawFd for net::TcpStream {
     fn into_raw_fd(self) -> RawFd {
         self.into_inner().into_socket().into_inner()
     }
 }
 #[stable(feature = "into_raw_os", since = "1.4.0")]
-#[cfg(not(target_os = "l4re"))] use net;
+#[cfg(not(target_os = "l4re"))]
 impl IntoRawFd for net::TcpListener {
     fn into_raw_fd(self) -> RawFd {
         self.into_inner().into_socket().into_inner()
     }
 }
 #[stable(feature = "into_raw_os", since = "1.4.0")]
-#[cfg(not(target_os = "l4re"))] use net;
+#[cfg(not(target_os = "l4re"))]
 impl IntoRawFd for net::UdpSocket {
     fn into_raw_fd(self) -> RawFd {
         self.into_inner().into_socket().into_inner()
