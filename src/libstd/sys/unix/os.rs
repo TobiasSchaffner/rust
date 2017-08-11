@@ -35,10 +35,12 @@ use vec;
 const TMPBUF_SZ: usize = 128;
 static ENV_LOCK: Mutex = Mutex::new();
 
-//TODO check this file
 extern {
     #[cfg(not(target_os = "dragonfly"))]
-    #[cfg_attr(any(target_os = "linux", target_os = "emscripten", target_os = "fuchsia"),
+    #[cfg_attr(any(target_os = "linux",
+                   target_os = "emscripten",
+                   target_os = "fuchsia",
+                   target_os = "l4re"),
                link_name = "__errno_location")]
     #[cfg_attr(any(target_os = "bitrig",
                    target_os = "netbsd",

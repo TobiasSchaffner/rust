@@ -18,7 +18,10 @@ use net;
 use os::raw;
 use sys;
 use io;
+#[cfg(not(target_os = "l4re"))]
 use sys_common::{self, AsInner, FromInner, IntoInner};
+#[cfg(target_os = "l4re")]
+use sys_common::{AsInner, FromInner, IntoInner};
 use libc;
 
 /// Raw file descriptors.
