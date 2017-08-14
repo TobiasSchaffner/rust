@@ -22,8 +22,7 @@ fn main() {
     let host = env::var("HOST").expect("HOST was not set");
     if cfg!(feature = "backtrace") && !target.contains("apple") &&
         !target.contains("msvc") && !target.contains("emscripten") &&
-        !target.contains("fuchsia") && !target.contains("redox") &&
-        !target.contains("l4re") {
+        !target.contains("fuchsia") && !target.contains("redox") {
         let _ = build_libbacktrace(&host, &target);
     }
 
