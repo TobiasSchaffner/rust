@@ -12,11 +12,22 @@ use PanicStrategy;
 use LinkerFlavor;
 use target::{LinkArgs, TargetOptions};
 use std::default::Default;
-use std::ffi::OsString;
 use std::env;
+use std::process::Command;
+
+// Use GCC to locate code for crt* libraries from the host, not from L4Re. Note
+// that a few files also come from L4Re, for these, the function shouldn't be
+// used.
+fn get_path_or(filename: &str) -> String {
+    let child = Command::new("gcc")
+            .arg(format!("-print-file-name={}", filename)).output()
+            .expect("Failed to execute GCC");
+    child.stdout().strip()
+}
 
 pub fn opts() -> TargetOptions {
-    let l4re_lib_path = env::var_os("L4RE_LIB_PATH_RUST").unwrap_or(OsString::new()).into_string().unwrap();
+    let l4re_lib_path = env::var_os("L4RE_LIBDIR").expect("Unable to find L4Re \
+                  library directory: L4RE_LIBDIR not set.").into_string();
     let mut pre_link_args = LinkArgs::new();
     pre_link_args.insert(LinkerFlavor::Ld, vec![
             format!("-T{}/main_stat.ld", l4re_lib_path),
@@ -24,7 +35,7 @@ pub fn opts() -> TargetOptions {
             "--defsym=__L4_KIP_ADDR__=0x6ffff000".to_string(),
             format!("{}/crt1.o", l4re_lib_path),
             format!("{}/crti.o", l4re_lib_path),
-            format!("{}/crtbeginT.o", l4re_lib_path),
+            get_path_or("crtbeginT.o"),
     ]);
     let mut post_link_args = LinkArgs::new();
     post_link_args.insert(LinkerFlavor::Ld, vec![
@@ -42,7 +53,7 @@ pub fn opts() -> TargetOptions {
             format!("{}/l4f/lib4shmc.a", l4re_lib_path),
             format!("{}/l4f/lib4re-c.a", l4re_lib_path),
             format!("{}/l4f/lib4re-c-util.a", l4re_lib_path),
-            format!("{}/l4f/libgcc_eh.a", l4re_lib_path),
+            "-lgcc_eh".into(),  // usually found on the host
             format!("{}/l4f/libdl.a", l4re_lib_path),
             "--start-group".to_string(),
             format!("{}/l4f/libl4util.a", l4re_lib_path),
@@ -52,7 +63,7 @@ pub fn opts() -> TargetOptions {
             "--end-group".to_string(),
             format!("{}/l4f/libl4sys.a", l4re_lib_path),
             "-gc-sections".to_string(),
-            format!("{}/crtend.o", l4re_lib_path),
+            get_path_or("crtend.o"),
             format!("{}/crtn.o", l4re_lib_path),
     ]);
 
