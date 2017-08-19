@@ -22,12 +22,12 @@ fn get_path_or(filename: &str) -> String {
     let child = Command::new("gcc")
             .arg(format!("-print-file-name={}", filename)).output()
             .expect("Failed to execute GCC");
-    child.stdout().strip()
+    String::from_utf8(child.stdout).unwrap()
 }
 
 pub fn opts() -> TargetOptions {
     let l4re_lib_path = env::var_os("L4RE_LIBDIR").expect("Unable to find L4Re \
-                  library directory: L4RE_LIBDIR not set.").into_string();
+                  library directory: L4RE_LIBDIR not set.").into_string().unwrap();
     let mut pre_link_args = LinkArgs::new();
     pre_link_args.insert(LinkerFlavor::Ld, vec![
             format!("-T{}/main_stat.ld", l4re_lib_path),
