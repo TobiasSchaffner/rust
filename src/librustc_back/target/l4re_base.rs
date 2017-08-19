@@ -22,7 +22,9 @@ fn get_path_or(filename: &str) -> String {
     let child = Command::new("gcc")
             .arg(format!("-print-file-name={}", filename)).output()
             .expect("Failed to execute GCC");
-    String::from_utf8(child.stdout).unwrap()
+    let mut path = String::from_utf8(child.stdout).unwrap();
+    path.pop(); // remove trailing newline
+    path
 }
 
 pub fn opts() -> TargetOptions {
@@ -53,7 +55,7 @@ pub fn opts() -> TargetOptions {
             format!("{}/l4f/lib4shmc.a", l4re_lib_path),
             format!("{}/l4f/lib4re-c.a", l4re_lib_path),
             format!("{}/l4f/lib4re-c-util.a", l4re_lib_path),
-            "-lgcc_eh".into(),  // usually found on the host
+            get_path_or("libgcc_eh.a"),
             format!("{}/l4f/libdl.a", l4re_lib_path),
             "--start-group".to_string(),
             format!("{}/l4f/libl4util.a", l4re_lib_path),
